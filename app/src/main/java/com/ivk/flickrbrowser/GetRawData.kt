@@ -1,6 +1,7 @@
 package com.ivk.flickrbrowser
 
 import android.os.AsyncTask
+import android.os.ProxyFileDescriptorCallback
 import android.util.Log
 import java.io.IOException
 import java.lang.Exception
@@ -11,13 +12,25 @@ enum class DownloadStatus{
     OK, IDLE, NOT_INITIALIZED, FAILED_OR_EMPTY, PERMISSIONS_ERROR, ERROR
 }
 
-
 private const val TAG = "GetRawData"
 
-class GetRawData : AsyncTask<String, Void, String>(){
+class GetRawData(private val listener: OnDownloadComplete) : AsyncTask<String, Void, String>(){
+
+    interface OnDownloadComplete {
+        fun onDownloadComplete(data: String, status: DownloadStatus)
+    }
+
     private var downloadStatus = DownloadStatus.IDLE
-    override fun onPostExecute(result: String?) {
+
+   /* private var listener: MainActivity? = null
+
+    fun setDownloadCompleteListener(callbackObject: MainActivity){
+        listener = callbackObject
+    }*/
+
+    override fun onPostExecute(result: String) {
         Log.d(TAG, "onPostExecute called, parameter is $result")
+        listener.onDownloadComplete(result, downloadStatus)
     }
 
     override fun doInBackground(vararg params: String?): String {
@@ -53,3 +66,5 @@ class GetRawData : AsyncTask<String, Void, String>(){
         }
     }
 }
+
+
