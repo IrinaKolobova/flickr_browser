@@ -1,7 +1,6 @@
 package com.ivk.flickrbrowser
 
 import android.os.AsyncTask
-import android.os.ProxyFileDescriptorCallback
 import android.util.Log
 import java.io.IOException
 import java.lang.Exception
