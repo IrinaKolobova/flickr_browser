@@ -13,7 +13,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:scaleType="fitStart"
-        app:srcCompat="@drawable/placeholder" />
+        app:srcCompat="@drawable/placeholder"
+        android:contentDescription="TODO" />
 
     <TextView
         android:id="@+id/title"
