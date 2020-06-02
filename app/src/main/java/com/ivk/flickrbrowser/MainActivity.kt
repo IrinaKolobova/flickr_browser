@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.content_main.*
 import java.util.ArrayList
+import androidx.preference.PreferenceManager
 
 private const val TAG = "MainActivity"
 
@@ -28,10 +29,6 @@ class MainActivity : BaseActivity(), GetRawData.OnDownloadComplete,
         recycler_view.layoutManager = LinearLayoutManager(this)
         recycler_view.addOnItemTouchListener(RecyclerItemClickListener(this, recycler_view, this))
         recycler_view.adapter = flickrRecyclerViewAdapter
-
-        val url = createUri("https://api.flickr.com/services/feeds/photos_public.gne", "android,oreo", "en-us", true)
-        val getRawData = GetRawData(this)
-        getRawData.execute(url)
 
         Log.d(TAG, "onCreate ends")
     }
@@ -78,7 +75,10 @@ class MainActivity : BaseActivity(), GetRawData.OnDownloadComplete,
         // as you specify a parent activity in AndroidManifest.xml.
         Log.d(TAG, "onOptionsItemSelected called")
         return when (item.itemId) {
-            R.id.action_settings -> true
+            R.id.action_search -> {
+                startActivity(Intent(this, SearchActivity::class.java))
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -107,5 +107,17 @@ class MainActivity : BaseActivity(), GetRawData.OnDownloadComplete,
 
     override fun onError(exception: Exception) {
         Log.e(TAG, "onError called with ${exception.message}")
+    }
+
+    override fun onResume() {
+        Log.d(TAG, ".onResume starts")
+        val sharedPref = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        val queryResult = sharedPref.getString(FLICKR_QUERY, "")
+        if (queryResult != null && queryResult.isNotEmpty()) {
+            val url = createUri("https://api.flickr.com/services/feeds/photos_public.gne", queryResult,"en-us", true)
+            val getRawData = GetRawData(this)
+            getRawData.execute(url)
+        }
+        super.onResume()
     }
 }
