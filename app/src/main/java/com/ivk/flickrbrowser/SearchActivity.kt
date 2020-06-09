@@ -10,6 +10,7 @@ import androidx.preference.PreferenceManager
 class SearchActivity : BaseActivity() {
     private val TAG = "SearchActivity"
     private var searchView: android.widget.SearchView? = null
+
     //private var searchView: SearchView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +36,7 @@ class SearchActivity : BaseActivity() {
 
         searchView?.isIconified = false
 
-        searchView?.setOnQueryTextListener(object: android.widget.SearchView.OnQueryTextListener {
+        searchView?.setOnQueryTextListener(object : android.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 Log.d(TAG, ".onQueryTextSubmit: called")
 
